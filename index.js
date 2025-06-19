@@ -47,6 +47,15 @@ async function run() {
         })
 
 
+        // Get or Read Data by GET Method R of CRUD only Specific one
+        app.get('/coffees/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await coffeesCollection.findOne(query);
+            res.send(result);
+        })
+
+
         // Create Data by POST Method C of CRUD
         app.post('/coffees', async (req, res) => {
             const newCoffee = req.body;
@@ -54,6 +63,30 @@ async function run() {
             const result = await coffeesCollection.insertOne(newCoffee)
             res.send(result);
         })
+
+        // Update Data
+        app.put('/coffees/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updatedCoffee = req.body;
+            const updatedDoc = {
+                $set: updatedCoffee
+            }
+
+            // const updatedDoc = {
+            //     $set: {
+            //         name: updatedCoffee.name,
+            //         supplier: updatedCoffee.supplier,
+            //     }
+            // }
+
+            const result = await coffeesCollection.updateOne(filter, updatedDoc, options);
+            res.send(result)
+        })
+
+
+
 
         // Delete Data by DELETE Method D of CRUD
         app.delete('/coffees/:id', async (req, res) => {

@@ -33,7 +33,8 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
-        const coffeesCollection = client.db('coffeesDB').collection('coffees')
+        const coffeesCollection = client.db('coffeesDB').collection('coffees');
+        const usersCollection = client.db('coffeesDB').collection('users')
 
         // Get or Read Data by GET Method R of CRUD
         app.get('/coffees', async (req, res) => {
@@ -95,6 +96,18 @@ async function run() {
             const result = await coffeesCollection.deleteOne(query);
             res.send(result)
         })
+
+        // User related APIs
+        app.post('/users', async (req, res) => {
+            const userProfile = req.body;
+            console.log(userProfile);
+            const result = await usersCollection.insertOne(userProfile);
+            res.send(result);
+        })
+
+
+
+
 
 
 
